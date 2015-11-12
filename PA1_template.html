@@ -211,48 +211,17 @@ The data is obtained from <a href="https://d396qusza40orc.cloudfront.net/repdata
 indata &lt;- read.csv(&quot;activity.csv&quot;)
 #load necessary packages
 library(dplyr)
-</code></pre>
-
-<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.2.2
-</code></pre>
-
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;
-## 
-## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag
-## 
-## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union
-</code></pre>
-
-<pre><code class="r">library(ggplot2)
+library(ggplot2)
 library(lattice)
-</code></pre>
-
-<pre><code>## Warning: package &#39;lattice&#39; was built under R version 3.2.2
-</code></pre>
-
-<pre><code class="r">library(mice)
-</code></pre>
-
-<pre><code>## Loading required package: Rcpp
-</code></pre>
-
-<pre><code>## Warning: package &#39;Rcpp&#39; was built under R version 3.2.2
-</code></pre>
-
-<pre><code>## mice 2.25 2015-11-09
+library(mice)
 </code></pre>
 
 <p>##What is mean number of steps per day?
+###1. Calculate the total number of steps taken per day
 Group the data by date.
 Then obtain the sum for each column.
 Create a histogram for the steps column.
-Finally, get the mean and the median for steps taken by date.
-###1. Calculate the total number of steps taken per day</p>
+Finally, get the mean and the median for steps taken by date.  </p>
 
 <pre><code class="r">groupDateData &lt;- group_by(indata, date) %&gt;% summarise_each(&quot;sum&quot;)
 </code></pre>
@@ -305,7 +274,8 @@ graph2
 <pre><code class="r">totalNA &lt;- sum(is.na(indata$steps))
 </code></pre>
 
-<p>###2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.</p>
+<p>###2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+Use the mice function from the mice package to impute the missing values. Use the predictive mean matching (pmm) method 5 times with a seed of 200.</p>
 
 <pre><code class="r">tmpData &lt;- mice(data = indata, m =5, method = &quot;pmm&quot;, seed = 200)
 </code></pre>

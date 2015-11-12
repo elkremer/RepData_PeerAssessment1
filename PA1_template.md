@@ -14,56 +14,17 @@ if(!file.exists('activity.csv')){
 indata <- read.csv("activity.csv")
 #load necessary packages
 library(dplyr)
-```
-
-```
-## Warning: package 'dplyr' was built under R version 3.2.2
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-## 
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-## 
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
 library(ggplot2)
 library(lattice)
-```
-
-```
-## Warning: package 'lattice' was built under R version 3.2.2
-```
-
-```r
 library(mice)
 ```
 
-```
-## Loading required package: Rcpp
-```
-
-```
-## Warning: package 'Rcpp' was built under R version 3.2.2
-```
-
-```
-## mice 2.25 2015-11-09
-```
-
 ##What is mean number of steps per day?
+###1. Calculate the total number of steps taken per day
 Group the data by date.
 Then obtain the sum for each column.
 Create a histogram for the steps column.
-Finally, get the mean and the median for steps taken by date.
-###1. Calculate the total number of steps taken per day
+Finally, get the mean and the median for steps taken by date.  
 
 ```r
 groupDateData <- group_by(indata, date) %>% summarise_each("sum")
@@ -121,6 +82,7 @@ The 5-minute interval, on average across all the days in the dataset, that conta
 totalNA <- sum(is.na(indata$steps))
 ```
 ###2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+Use the mice function from the mice package to impute the missing values. Use the predictive mean matching (pmm) method 5 times with a seed of 200.
 
 ```r
 tmpData <- mice(data = indata, m =5, method = "pmm", seed = 200)
